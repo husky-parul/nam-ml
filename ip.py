@@ -4,3 +4,15 @@ class IP(object):
         self.asn=asn
         self.asname=asname
         self.netblock=netblock
+
+    def getIp(self):
+        return self.ip
+
+    def getAsn(self):
+        return self.asn
+
+    def getAsnName(self):
+        return self.asname
+
+    def getNetBlock(self):
+        return self.netblock
