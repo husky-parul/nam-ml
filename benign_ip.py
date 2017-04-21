@@ -24,7 +24,7 @@ class BenignIP(object):
         ipObj = IP()
 
         while True:
-            #print ips
+            self.ipDict = ips
             for service in result['matches']:
                 if service.get('asn'):
                     ipObj.ip = service['ip_str']
@@ -40,25 +40,25 @@ class BenignIP(object):
                     time.sleep(30)
                     print 'after sleep', time.ctime()
                 result = self.api.search(query)
-                print total, len(ips)
+                self.ipDict = ips
+                print total, len(self.ipDict),count
+
             else:
                 print total,len(ips)
                 self.ipDict=ips
                 self.pickleAndDumpIps(self.ipDict)
                 break
 
-    def pickleAndDumpIps(self,ipDict):
-        with open('ips', 'wb') as f:
-            for key,val in ipDict.iteritems():
-                pickle.dump(val, f)
+    def pickleAndDumpIps(self,ip_dict):
+        with open('benign_ips', 'wb') as f:
+            pickle.dump(ip_dict, f)
 
     def unpickleAndLoad(self):
-        ipDict={}
-        with open('ips', 'rb') as f:
-            ob = pickle.load(f)
-            ipDict.update({ob.getIp():ob})
-        print len(ipDict)
-        return ipDict
+        ip_dict={}
+        with open('benign_ips', 'rb') as f:
+            ip_dict = pickle.load(f)
+        print len(ip_dict)
+        return ip_dict
 
 
 
@@ -66,8 +66,15 @@ class BenignIP(object):
 
 
 
+try:
+    obj=BenignIP()
+    obj.get_ip()
 
-obj=BenignIP()
-obj.get_ip()
+except Exception as e:
+        print 'Time out error occured: '
+        obj.pickleAndDumpIps(obj.ipDict)
+        new_dict=obj.unpickleAndLoad()
+        print 'Error: %s' % e
+        sys.exit(1)
 
 
