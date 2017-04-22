@@ -31,22 +31,9 @@ class BlackListedIP(object):
             ips.update({ip:ipObj})
 
         self.ipDict=ips
-        self.pickleAndDumpIps(self.ipDict)
-        self.unpickleAndLoad()
-            # if len(ips)!=11000:
-            #     count+=1
-            #     DD = datetime.timedelta(days=365)
-            #     today = earlier
-            #     print 'today', today
-            #     earlier = today - DD
-            #     print 'earlier: ',earlier
-            #     earlier_str = earlier.strftime("%Y-%m-%d")
-            #     url = self.url + str(10000) + '/' + earlier_str + '?json'
-            #     top_ips = json.load(urllib2.urlopen(url))
-            #     print 'count: ',count
-            # else:
-            #     print count
-            #     break
+        self.pickleAndDumpIps(self.ipDict,'top_blacklisted_ip.json')
+        self.unpickleAndLoad('top_blacklisted_ip.json')
+
 
     def get_ips(self):
         ip_dict = self.unpickleAndLoad()
@@ -68,29 +55,51 @@ class BlackListedIP(object):
             outfile.write(']')
 
     def get_ip_info(self):
-        ip_dict=self.unpickleAndLoad()
-        for k,val in ip_dict.iteritems():
-            ip_info_url=self.config.get('dshield','url.ip')
-            ip_info_url=ip_info_url+k+'?json'
-            print ip_info_url
-            ip_info=json.load(urllib2.urlopen(ip_info_url))
-            print '1111',ip_info
-            print '2222', type(ip_info)
-            for k,val in ip_info.iteritems():
-                print 'item',k,val
+        ip_f=open('top_blacklisted_ip.json','rb')
+        ip_dict={}
+        ip_j = json.load(ip_f)
+        for item in ip_j:
+            item=item['ip']
+            if item.get('threatfeeds'):
+                ip = item['number']
+                firstseen = item['mindate']
+                lastseen=item['maxdate']
+                asn = item['as']
+                ip_obj = IP(ip, asn, '', '', firstseen,lastseen)
+                ip_obj.netblock = ip_obj.getNetBlock()
+                ip_obj.setRank()
+                ip_dict.update({ip: ip_obj})
+                # threatfeed=item['threatfeeds']
+                #
+                # for key in threatfeed.keys():
+                #     print key
+                #     if key.startswith('blocklistde'):
+
+
+
+        print 'ip_dict calculated. size is: ',len(ip_dict)
+        print 'pickle start'
+        self.pickleAndDumpIps(ip_dict,'blacklisted_ip_obj')
+        ip_dict =self.unpickleAndLoad('blacklisted_ip_obj')
+        count=0
 
         for k,val in ip_dict.iteritems():
-            print val.getAsn()
+            print 'key: ',k,val.getRank(),val.getAsn(),val.getFirstSeen(),val.getLastSeen()
+            count+=1
+            if count==10:
+                break
+
+            # if val.getAsn()!=0:
+            #     count += 1
+        print 'Non zero asn: ',count
 
 
-
-
-    def pickleAndDumpIps(self,ip_dict):
-        with open('black_ips', 'wb') as f:
+    def pickleAndDumpIps(self,ip_dict,file_name):
+        with open(file_name, 'wb') as f:
             pickle.dump(ip_dict, f)
 
-    def unpickleAndLoad(self):
-        with open('black_ips', 'rb') as f:
+    def unpickleAndLoad(self,file_name):
+        with open(file_name, 'rb') as f:
             ob = pickle.load(f)
             ip_dict=ob
         return ip_dict
@@ -104,6 +113,6 @@ class BlackListedIP(object):
 
 obj=BlackListedIP()
 #obj.get_ip()
-obj.get_ips()
+obj.get_ip_info()
 
 
