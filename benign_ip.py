@@ -46,7 +46,7 @@ class BenignIP(object):
             else:
                 print total,len(ips)
                 self.ipDict=ips
-                self.pickleAndDumpIps(self.ipDict)
+                self.pickleAndDumpIps(self.ipDict,'benign_ips')
                 break
 
     def pickleAndDumpIps(self,ip_dict,file_name):
