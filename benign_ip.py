@@ -32,7 +32,7 @@ class BenignIP(object):
                     ips.update({ipObj.getIp(): ipObj})
 
 
-            if len(ips)<total:
+            if (count*10)<total:
                 count+=1
                 query='port&page='+str(count)
                 if (count%10)==0:
@@ -49,13 +49,13 @@ class BenignIP(object):
                 self.pickleAndDumpIps(self.ipDict)
                 break
 
-    def pickleAndDumpIps(self,ip_dict):
-        with open('benign_ips', 'wb') as f:
+    def pickleAndDumpIps(self,ip_dict,file_name):
+        with open(file_name, 'wb') as f:
             pickle.dump(ip_dict, f)
 
-    def unpickleAndLoad(self):
+    def unpickleAndLoad(self,file_name):
         ip_dict={}
-        with open('benign_ips', 'rb') as f:
+        with open(file_name, 'rb') as f:
             ip_dict = pickle.load(f)
         print len(ip_dict)
         return ip_dict
@@ -66,15 +66,29 @@ class BenignIP(object):
 
 
 
-try:
-    obj=BenignIP()
-    obj.get_ip()
-
-except Exception as e:
-        print 'Time out error occured: '
-        obj.pickleAndDumpIps(obj.ipDict)
-        new_dict=obj.unpickleAndLoad()
-        print 'Error: %s' % e
-        sys.exit(1)
+# try:
+#     obj=BenignIP()
+#     obj.get_ip()
+#
+# except Exception as e:
+#         print 'Time out error occured: '
+#         obj.pickleAndDumpIps(obj.ipDict)
+#         new_dict=obj.unpickleAndLoad()
+#         print 'Error: %s' % e
+#         sys.exit(1)
+obj=BenignIP()
+new_dict=obj.unpickleAndLoad('benign_ips')
+ip_dict={}
+ip_obj=IP()
+for key,val in new_dict.iteritems():
+    ip_obj.ip=key
+    ip_obj.asn=val.getAsn()[2:]
+    ip_obj.rank=0.0
+    ip_obj.setNetBlock()
+    ip_dict.update({key:ip_obj})
+print len(new_dict)
+print len(ip_dict)
+obj.pickleAndDumpIps(ip_dict,'full_benign_ip')
+print len(obj.unpickleAndLoad('full_benign_ip'))
 
 
