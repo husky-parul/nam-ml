@@ -66,32 +66,21 @@ class BlackListedIP(object):
                 lastseen=item['maxdate']
                 asn = item['as']
                 ip_obj = IP(ip, asn, '', '', firstseen,lastseen)
-                ip_obj.netblock = ip_obj.getNetBlock()
+                ip_obj.setNetBlock()
                 ip_obj.setRank()
+                ip_obj.isMalicious=True
+                ip_obj.setInfectionRate(True)
                 ip_dict.update({ip: ip_obj})
-                # threatfeed=item['threatfeeds']
-                #
-                # for key in threatfeed.keys():
-                #     print key
-                #     if key.startswith('blocklistde'):
 
 
 
         print 'ip_dict calculated. size is: ',len(ip_dict)
+        print 'dict: ',ip_dict
         print 'pickle start'
-        self.pickleAndDumpIps(ip_dict,'blacklisted_ip_obj')
-        ip_dict =self.unpickleAndLoad('blacklisted_ip_obj')
-        count=0
+        self.pickleAndDumpIps(ip_dict,'blacklisted_ip.ser')
 
-        for k,val in ip_dict.iteritems():
-            print 'key: ',k,val.getRank(),val.getAsn(),val.getFirstSeen(),val.getLastSeen()
-            count+=1
-            if count==10:
-                break
 
-            # if val.getAsn()!=0:
-            #     count += 1
-        print 'Non zero asn: ',count
+
 
 
     def pickleAndDumpIps(self,ip_dict,file_name):
@@ -112,7 +101,19 @@ class BlackListedIP(object):
 
 
 obj=BlackListedIP()
-#obj.get_ip()
+# #obj.get_ip()
 obj.get_ip_info()
+# ip_dict =obj.unpickleAndLoad('blacklisted_ip.ser')
+# count=0
+#
+# for k,val in ip_dict.iteritems():
+#     print 'key: ',k,val.getRank(),val.getAsn(),val.getFirstSeen(),val.getLastSeen(),val.getNetBlock()
+#     count+=1
+#     if count==10:
+#         break
+#
+#             # if val.getAsn()!=0:
+#             #     count += 1
+#     print 'Non zero asn: ',count
 
 
