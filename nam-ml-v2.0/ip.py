@@ -1,5 +1,6 @@
 import datetime
 from datetime import date
+from random import randrange, uniform
 
 class IP(object):
     def __init__(self, ip='', asn='',asname='',netblock='',firstseen='',lastseen=''):
@@ -16,9 +17,9 @@ class IP(object):
 
     def setInfectionRate(self,is_malicious=True):
         if is_malicious:
-            self.infectionRate=10.0
+            self.infectionRate=uniform(0, 50)
         else:
-            self.infectionRate=0.0
+            self.infectionRate=uniform(0, 5)
 
     def getInfectionRate(self):
         return self.infectionRate
@@ -80,29 +81,7 @@ class IP(object):
         tm = today[1]
         tdays = today[2]
         today = date(int(ty), int(tm), int(tdays))
-
         earlier = d - today
-        # print 'today:',today
-        # print 'd: ',d
-        # print 'days gap: ',earlier.days
         return earlier.days
 
 
-
-
-# x = IP('10.10.10.10')
-# print x.ip, x.asn
-# print x.getNetBlock()
-# print x.get_rank()
-
-
-# class IP(object):
-#     def __init__(self, ip='', asn='',asname='',netblock='',firstseen=''):
-#         self.ip = ip
-#         self.asn = asn
-#         self.asname = asname
-#         self.netblock = netblock
-#         self.rank=0.0
-#         self.firstseen=''
-
-# ((ASN,NET),2)
