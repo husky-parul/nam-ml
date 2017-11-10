@@ -25,6 +25,9 @@ The classification algorithm that we would be using is Support Vector Machines. 
 
 References
 [1]DShield API - SANS Internet Storm Center - https://isc.sans.edu/api/
+
 [2]Internet Bad Neighborhoods – G. Moura http://www.utwente.nl/en/archive/2013/03/bad_neighbourhoods_on_the_inte rnet_are_a_real_nuisance.doc
+
 [3]SVM-http://docs.opencv.org/2.4/doc/tutorials/ml/introduction_to_svm/introduction_to_svm.html
+
 [4]Implementing paper - https://www.defcon.org/images/defcon-21/dc-21-presentations/Pinto/DEFCON-21-Pinto-Defending-Networks-Machine-Learning-WP-Updated.pdf
