@@ -5,13 +5,13 @@ With the advent of PCI and HIPAA, all organisations are logging network activiti
 The idea is to introduce machine learning to mine relevant information from ocean of log files and enable organisations to make informed decisions. What we are trying to achieve is classify potential malicious activities logged in the network. This would not only reduce tiresome hours spent by human resources but also help organisation to speed up their mitigation and response when a breach has occurred.
 
 Nevertheless a learning algorithm would need massive dataset. The input to the algorithm is pre-processed datasets from firewall and network logs. The source of data is DShield API from SANS[1]. An example is as below
-<data>
-<ip>183.060.048.025</ip>
-<attacks>54045</attacks>
-<count>650544</count>
-<firstseen>2015-10-08</firstseen>
-<lastseen>2017-03-14</lastseen>
-</data>
+                     <data>
+                        <ip>183.060.048.025</ip>
+                        <attacks>54045</attacks>
+                        <count>650544</count>
+                        <firstseen>2015-10-08</firstseen>
+                        <lastseen>2017-03-14</lastseen>
+                      </data>
 
 IP: IP address of the attacker
 attacks: targets/number of unique destination IP addresses for these packets
